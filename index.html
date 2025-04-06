@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEO Blog Post Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 2rem;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 1rem;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      background: white;
+      border-radius: 5px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>SEO Blog Post Generator</h1>
+  <form id="generateForm">
+    <label for="product">Enter Product Name:</label>
+    <input type="text" id="product" name="product" required />
+    <button type="submit">Generate Blog Post</button>
+  </form>
+
+  <div class="result" id="result" style="display: none;">
+    <h2>Generated Blog Post:</h2>
+    <p id="blogText"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("generateForm");
+    const resultDiv = document.getElementById("result");
+    const blogText = document.getElementById("blogText");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const product = document.getElementById("product").value;
+
+      blogText.textContent = "Generating blog post...";
+      resultDiv.style.display = "block";
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ product })
+        });
+
+        const data = await res.json();
+        blogText.textContent = data.blog || "Failed to generate.";
+      } catch (error) {
+        blogText.textContent = "Error occurred. Try again.";
+      }
+    });
+  </script>
+</body>
+</html>
